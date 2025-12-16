@@ -23,7 +23,8 @@ describe('fillTank', () => {
   it('should not fill more than customer can afford', () => {
     customer.money = 6;
     fillTank(customer, 2);
-    expect(customer.vehicle.fuelRemains).toBe(5 + 3);
+    const canBuyAmountFuel = 6 / 2
+    expect(customer.vehicle.fuelRemains).toBe(5 + canBuyAmountFuel);
     expect(customer.money).toBe(0);
   });
 
