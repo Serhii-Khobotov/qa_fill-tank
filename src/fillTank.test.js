@@ -17,21 +17,23 @@ describe('fillTank', () => {
 
   it('should fill fuel correctly without exceeding maxTankCapacity', () => {
     fillTank(customer, 2, 20);
-    expect(customer.vehicle.fuelRemains).toBeLessThanOrEqual(customer.vehicle.maxTankCapacity);
+    expect(customer.vehicle.fuelRemains).toBe(customer.vehicle.maxTankCapacity);
   });
 
   it('should not fill more than customer can afford', () => {
-    customer.money = 5;
+    customer.money = 6;
     fillTank(customer, 2);
-    expect(customer.vehicle.fuelRemains).toBe(5 + 2.5); 
+    expect(customer.vehicle.fuelRemains).toBe(5 + 3);
     expect(customer.money).toBe(0);
   });
 
   it('should use default amount (Infinity) if not specified', () => {
     fillTank(customer, 2);
+
     const freeSpace = customer.vehicle.maxTankCapacity - 5;
     const canBuy = 50 / 2;
     const expectedFuel = Math.floor(Math.min(freeSpace, canBuy) * 10) / 10;
+
     expect(customer.vehicle.fuelRemains).toBe(5 + expectedFuel);
   });
 
@@ -44,8 +46,10 @@ describe('fillTank', () => {
 
   it('should correctly deduct money after filling', () => {
     fillTank(customer, 2, 5);
+
     const roundedFuel = Math.floor(5 * 10) / 10;
     const roundedPrice = Math.round(roundedFuel * 2 * 100) / 100;
+
     expect(customer.money).toBeCloseTo(50 - roundedPrice);
     expect(customer.vehicle.fuelRemains).toBe(5 + roundedFuel);
   });
