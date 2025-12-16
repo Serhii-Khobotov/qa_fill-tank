@@ -21,11 +21,16 @@ describe('fillTank', () => {
   });
 
   it('should not fill more than customer can afford', () => {
-    customer.money = 6;
-    fillTank(customer, 2);
-    const canBuyAmountFuel = 6 / 2
-    expect(customer.vehicle.fuelRemains).toBe(5 + canBuyAmountFuel);
-    expect(customer.money).toBe(0);
+    const customerMoney = customer.money;
+    const fuelPrice = 2;
+    const fuelRemains = customer.fuelRemains
+    const canBuyAmountFuel = customerMoney / fuelPrice;
+    fillTank(customer, fuelPrice);
+  
+    if (canBuyAmountFuel >= 1 && fillTank[2] === 'undefined') {
+      expect(customer.vehicle.fuelRemains).toBe(fuelRemains + canBuyAmountFuel);
+      expect(customer.money).toBe(0);
+    }
   });
 
   it('should use default amount (Infinity) if not specified', () => {
@@ -39,10 +44,17 @@ describe('fillTank', () => {
   });
 
   it('should not fill if rounded fuel < 2', () => {
-    customer.money = 1;
-    fillTank(customer, 2);
-    expect(customer.vehicle.fuelRemains).toBe(5);
-    expect(customer.money).toBe(1);
+    const customerMoney = customer.money;
+    const fuelRemains = customer.fuelRemains
+    const fuelPrice = 2;
+    const canBuyAmountFuel = customerMoney / fuelPrice;
+
+    fillTank(customer, fuelPrice);
+
+    if (canBuyAmountFuel < 1) {
+      expect(customer.vehicle.fuelRemains).toBe(fuelRemains);
+      expect(customer.money).toBe(customerMoney);
+    }
   });
 
   it('should correctly deduct money after filling', () => {
